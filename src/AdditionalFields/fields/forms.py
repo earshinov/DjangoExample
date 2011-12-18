@@ -12,7 +12,7 @@ IntegerField = formField(IntegerField)
 
 
 class FieldForm(ModelForm):
-  type = ChoiceField(label=_('Field Type'), choices=(
+  fieldType = ChoiceField(label=_('Field Type'), choices=(
     ('text',     _('Text')),
     ('date',     _('Date')),
     ('list',     _('Choice from list')),
@@ -28,28 +28,28 @@ class FieldForm(ModelForm):
     model = Field
     exclude = ('fieldName',)
 
-  FIELDS_THAT_CANNOT_BE_CHANGED_AFTER_CREATION = ( 'target', 'type', 'bookmarkName' )
+  FIELDS_THAT_CANNOT_BE_CHANGED_AFTER_CREATION = ( 'target', 'fieldType', 'bookmarkName' )
 
   def __init__(self, *args, **kw):
     super(FieldForm, self).__init__(*args, **kw)
 
-    # отображаем поле type после target
+    # отображаем поле fieldType после target
     fieldOrder = self.fields.keyOrder
-    fieldOrder.pop(fieldOrder.index('type'))
-    fieldOrder.insert(fieldOrder.index('target') + 1, 'type')
+    fieldOrder.pop(fieldOrder.index('fieldType'))
+    fieldOrder.insert(fieldOrder.index('target') + 1, 'fieldType')
 
     # добавляем подсказки
     message = ugettext('Cannot be changed afterwards')
     for fieldName in self.FIELDS_THAT_CANNOT_BE_CHANGED_AFTER_CREATION:
       self.fields[fieldName].notes.append(message)
-      
+
   def full_clean(self):
     super(FieldForm, self).full_clean()
-    
+
     # в этом случае никакая валидация проводиться не должна
     if not self.is_bound:
       return
-    
+
     # вызываем для модели дополнительный метод валидации
     # Field.validateUniqueBookmarkName
     if self.instance.needValidateUniqueBookmarkName(self._errors):
