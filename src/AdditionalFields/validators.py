@@ -15,4 +15,4 @@ class AnnotatedValidator(object):
 
 class LatinCharsValidator(RegexValidator, AnnotatedValidator):
   def __init__(self):
-    RegexValidator.__init__(self, '[a-zA-Z]+', _('Only latin characters'))
+    RegexValidator.__init__(self, '^[a-zA-Z]+$', _('Only latin characters'))
