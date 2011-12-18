@@ -76,12 +76,6 @@ class Field(Model):
   def isSystem(self):
     return bool(self.fieldName)
 
-  def targetName(self):
-    return self.target[0].upper() + self.target[1:]
-
-  def readableClassName(self):
-    return u'Field'
-
   # ===================================================================
   # Дополнительный метод валидации validateUniqueBookmarkName()
   # ===================================================================
@@ -144,15 +138,6 @@ class Field(Model):
 
     if errors:
       raise ValidationError(errors)
-
-
-  def __unicode__(self):
-    s = self.bookmarkName if self.fieldName is None \
-      else self.bookmarkName + u':' + self.fieldName
-    return u'%s%s «%s» (%s)' % (
-      self.targetName() + ' ' if self.target else '',
-      self.readableClassName(),
-      self.name, s)
 
 # #####################################################################
 # Модель опции динамического поля типа "Список"
