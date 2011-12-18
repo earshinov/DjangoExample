@@ -18,9 +18,9 @@
       {% include "form-template.html" %}
     </table>
     <div class="formButtons">
-      <input type="submit" name="save" value="{% trans "Submit" %}"/>
+      <input type="submit" name="save" value="{% trans 'Submit' %}"/>
       {% if form.instance.id %}
-        <input type="submit" name="delete" value="{% trans "Delete" %}"/>
+        <input type="submit" name="delete" value="{% trans 'Delete' %}"/>
       {% endif %}
       {% if form.backurl.value %}
         <a class="control backLink" href="{{ form.backurl.value }}">{% trans "Back" %}</a>
