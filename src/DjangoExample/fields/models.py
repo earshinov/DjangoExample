@@ -4,9 +4,9 @@ from django.core.exceptions import ValidationError, NON_FIELD_ERRORS
 from django.db.models import Model, ForeignKey, Q, \
   BooleanField, CharField, IntegerField
 from django.utils.translation import ugettext_lazy as _
-from AdditionalFields.forms import modelField
-from AdditionalFields.i18n import I18n
-from AdditionalFields.validators import LatinCharsValidator
+from DjangoExample.forms import modelField
+from DjangoExample.i18n import I18n
+from DjangoExample.validators import LatinCharsValidator
 
 BooleanField = modelField(BooleanField)
 CharField = modelField(CharField)

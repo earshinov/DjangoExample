@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from AdditionalFields.HeaderFooter import HeaderFooter
+from DjangoExample.HeaderFooter import HeaderFooter
 from django.conf import settings
 from django.shortcuts import render_to_response
 

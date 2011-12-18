@@ -6,7 +6,7 @@ from django.http import HttpResponseRedirect
 from django.template import RequestContext
 from fields.models import Field
 from fields.forms import FieldForm
-from AdditionalFields.HeaderFooter import HeaderFooter
+from DjangoExample.HeaderFooter import HeaderFooter
 
 
 def fieldList(request):

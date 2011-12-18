@@ -1,13 +1,13 @@
-#Sun Dec 18 16:46:21 MSK 2011
+#Sun Dec 18 19:27:34 MSK 2011
 eclipse.preferences.version=1
-encoding//src/AdditionalFields/fields/forms.py=utf-8
-encoding//src/AdditionalFields/fields/models.py=utf-8
-encoding//src/AdditionalFields/fields/views.py=utf-8
-encoding//src/AdditionalFields/forms.py=utf-8
-encoding//src/AdditionalFields/i18n.py=utf-8
-encoding//src/AdditionalFields/language_selection/views.py=utf-8
-encoding//src/AdditionalFields/settings.py=utf-8
-encoding//src/AdditionalFields/urls.py=utf-8
-encoding//src/AdditionalFields/utils/templatetags/assign.py=utf-8
-encoding//src/AdditionalFields/utils/templatetags/field_widget_type.py=utf-8
-encoding//src/AdditionalFields/validators.py=utf-8
+encoding//src/DjangoExample/fields/forms.py=utf-8
+encoding//src/DjangoExample/fields/models.py=utf-8
+encoding//src/DjangoExample/fields/views.py=utf-8
+encoding//src/DjangoExample/forms.py=utf-8
+encoding//src/DjangoExample/i18n.py=utf-8
+encoding//src/DjangoExample/language_selection/views.py=utf-8
+encoding//src/DjangoExample/settings.py=utf-8
+encoding//src/DjangoExample/urls.py=utf-8
+encoding//src/DjangoExample/utils/templatetags/assign.py=utf-8
+encoding//src/DjangoExample/utils/templatetags/field_widget_type.py=utf-8
+encoding//src/DjangoExample/validators.py=utf-8

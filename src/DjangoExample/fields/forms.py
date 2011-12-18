@@ -2,8 +2,8 @@
 
 from django.forms import ChoiceField, IntegerField
 from django.utils.translation import ugettext
-from AdditionalFields.forms import formField
-from AdditionalFields.forms import ModelForm
+from DjangoExample.forms import formField
+from DjangoExample.forms import ModelForm
 from fields.models import Field
 from django.core.exceptions import ValidationError
 
