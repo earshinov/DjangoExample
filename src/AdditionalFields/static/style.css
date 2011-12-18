@@ -1,0 +1,31 @@
+html { background-color: White; color: Black; }
+
+h1 { font-size: 120%; }
+
+a { color: RoyalBlue; }
+a:visited { color: DarkViolet; }
+a.control { color: RoyalBlue; }
+
+/* Верхнее меню
+-------------------------------------------------------------------- */
+
+.topMenu a.active { background-color: RoyalBlue; padding: 4px 8px; color: White; }
+
+/* Формы
+-------------------------------------------------------------------- */
+
+.formTable { margin: 0 0 1em; border-spacing: 2px; margin-left: -6px; }
+.formTable td, .formTable th { padding: 1px 4px; }
+.formTable th { text-align: left; font-weight: normal; }
+.formTable input[type=checkbox] { margin: 0; }
+.formTable .required label:after { content: " *"; color: Red; }
+.formTable .error input, .formTable .error select { border: 2px Solid Red; }
+
+.nonfieldErrors,
+.errorlist,
+.notelist { margin: 0; list-style-type: none; padding-left: 0; font-size: smaller; }
+.nonfieldErrors,
+.errorlist { font-weight: bold; color: Red; }
+.notelist { color: #666; }
+
+.formButtons .backLink { margin-left: .5em; }

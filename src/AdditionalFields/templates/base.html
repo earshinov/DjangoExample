@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+{% load assign %}
+<link rel="stylesheet" href="/static/style.css"/>
+{% assign title %}
+  {% block title %}{% endblock %}
+{% endassign %}
+<title>{{ title }}</title>
+
+{% if header_footer %}
+<div class="topMenu">
+  {% for section in header_footer.site_sections %}
+  	<a class="control {% if section.selected %}active{% endif %}" href="{{ section.default_page }}">{{ section.name }}</a>
+  	{% if not forloop.last %} | {% endif %}
+  {% endfor %}
+</div>
+{% endif %}
+
+<h1>{{ title }}</h1>
+{% block content %}{% endblock %}

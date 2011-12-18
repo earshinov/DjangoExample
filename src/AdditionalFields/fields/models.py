@@ -1,0 +1,211 @@
+# -*- coding: utf-8 -*-
+
+from django.core.exceptions import ValidationError, NON_FIELD_ERRORS
+from django.db.models import Model, ForeignKey, Q, \
+  BooleanField, CharField, IntegerField
+from django.utils.translation import ugettext_lazy as _
+from AdditionalFields.forms import modelField
+from AdditionalFields.i18n import I18n
+from AdditionalFields.validators import LatinCharsValidator
+
+BooleanField = modelField(BooleanField)
+CharField = modelField(CharField)
+IntegerField = modelField(IntegerField)
+
+# #####################################################################
+# Базовая модель динамического поля
+# #####################################################################
+
+@I18n('name')
+class Field(Model):
+  target = CharField(_('Target Table'),
+    max_length=20,
+    blank=False,
+    choices=(
+      ('company', _('Company')),
+      ('contact', _('Contact'))
+    ),
+    default='company')
+  name = CharField(_('Field Name'),
+    max_length=128,
+    blank=False)
+  bookmarkName = CharField(_('Bookmark Name'),
+    max_length=128,
+    blank=False,
+    unique=True,
+    validators=[LatinCharsValidator()])
+  fieldName = CharField(_('Field Name'),
+    max_length=128,
+    blank=True,
+    validators=[LatinCharsValidator()])
+  required = BooleanField(_('Required'),
+    default=False)
+
+  class Meta:
+    verbose_name = _('Field')
+    verbose_name_plural = _('Fields')
+  
+  # ===================================================================
+  # Методы "бизнес-логики" и не очень
+  # ===================================================================  
+    
+  def getFieldName(self):
+    return self.fieldName if self.fieldName else self.bookmarkName
+
+  def isSystem(self):
+    return bool(self.fieldName)
+  
+  def targetName(self):
+    return self.target[0].upper() + self.target[1:]
+
+  def readableClassName(self):
+    return u'Field'
+
+  # ===================================================================
+  # Дополнительный метод валидации validateUniqueBookmarkName()
+  # ===================================================================
+
+  FIELDS_REQUIRED_TO_VALIDATE_UNIQUE_BOOKMARK_NAME = ( 'target', 'bookmarkName', 'fieldName' ) 
+
+  def needValidateUniqueBookmarkName(self, errors):
+    #
+    # ValidateUniqueBookmarkName не надо вызывать, когда хотя бы одно из полей,
+    # по которым проверяется уникальность, уже помечено как невалидное.  Если
+    # этого не делать, пользователь получит лишние ошибки валидации, а нас
+    # придётся бороться с ошибками "Can not use None as query value" внутри
+    # validateUniqueBookmarkName().
+    #
+    for fieldName in errors:
+      if fieldName in self.FIELDS_REQUIRED_TO_VALIDATE_UNIQUE_BOOKMARK_NAME:
+        return False
+    return True
+    
+  def validateUniqueBookmarkName(self):
+    '''
+    Дополнительный метод валидации, проверяющий уникальность (target, ISNULL(fieldName, bookmarkName)).
+    Автоматически вызывается в методе full_clean() модели, но, так как этот метод не используется
+    при сохранении из форм, привязанных к модели, в таких формах метод необходимо вызывать вручную,
+    предварительно вызвав needValidateUniqueBookmarkName(). 
+    '''
+    
+    fieldName = self.getFieldName()
+    qs = Field.objects.filter(
+      Q(target__exact=self.target),
+      Q(fieldName__iexact=fieldName) |
+      Q(fieldName__isnull=True, bookmarkName__iexact=fieldName))
+
+    # Exclude the current object from the query if we are editing an
+    # instance (as opposed to creating a new one)
+    if not self._state.adding and self.pk is not None:
+        qs = qs.exclude(pk=self.pk)
+
+    if qs.exists():
+      message = self.unique_error_message(Field, ('bookmarkName',))
+      raise ValidationError({ NON_FIELD_ERRORS: message })
+  
+  # ===================================================================
+  # Переопределение стандартных методов модели
+  # ===================================================================
+  
+  def full_clean(self, **kw):
+    errors = {}
+    try:
+      Model.full_clean(self, **kw)
+    except ValidationError as e:
+      errors = e.update_error_dict(errors)
+      
+    # вызываем дополнительный метод валидации validateUniqueBookmarkName()
+    if self.needValidateUniqueBookmarkName(errors):
+      try:
+        self.validateUniqueBookmarkName()
+      except ValidationError as e:
+        errors = e.update_error_dict(errors)
+        
+    if errors:
+      raise ValidationError(errors)
+    
+
+  def __unicode__(self):
+    s = self.bookmarkName if self.fieldName is None \
+      else self.bookmarkName + u':' + self.fieldName
+    return u'%s%s «%s» (%s)' % (
+      self.targetName() + ' ' if self.target else '',
+      self.readableClassName(),
+      self.name, s)
+
+# #####################################################################
+# Унаследованные модели динамических полей
+# #####################################################################
+
+class TextField(Field):
+  minLength = IntegerField(_('Minumum Length'), blank=True)
+  maxLength = IntegerField(_('Maximum Length'), blank=True)
+
+  class Meta:
+    verbose_name = _('Text Field')
+    verbose_name_plural = _('Text Fields')
+
+  def readableClassName(self):
+    return u'Text Field'
+
+
+class DateField(Field):
+
+  class Meta:
+    verbose_name = _('Date Field')
+    verbose_name_plural = _('Date Fields')
+
+  def readableClassName(self):
+    return u'Date Field'
+
+
+class ListField(Field):
+
+  class Meta:
+    verbose_name = _('List Field')
+    verbose_name_plural = _('List Fields')
+
+  def readableClassName(self):
+    return u'List Field'
+
+
+class MinistryField(Field):
+
+  class Meta:
+    verbose_name = _('Ministry Field')
+    verbose_name_plural = _('Ministry Fields')
+
+  def readableClassName(self):
+    return u'Ministry Field'
+
+
+class SectorField(Field):
+
+  class Meta:
+    verbose_name = _('Sector Field')
+    verbose_name_plural = _('Sector Fields')
+
+  def readableClassName(self):
+    return u'Sector Field'
+
+# #####################################################################
+# Модель опции динамического поля типа "Список"
+# #####################################################################
+
+@I18n('name')
+class FieldOption(Model):
+  field = ForeignKey(ListField,
+    verbose_name=_('Field'),
+    db_column='field')
+  name = CharField(
+    name=_('Name'),
+    max_length=128)
+  bookmarkName = CharField(
+    name=_('Bookmark Name'),
+    max_length=128,
+    validators=[LatinCharsValidator()])
+
+  class Meta:
+    verbose_name = _('Field Option')
+    verbose_name_plural = _('Field Options')
+    unique_together=(('field', 'bookmarkName'),)

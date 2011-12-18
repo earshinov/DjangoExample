@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}
+  {% trans "Language Selection" %}
+{% endblock %}
+
+{% block content %}
+  <form action="/i18n/setlang/" method="post">
+    <input name="next" type="hidden" value="/" />
+    <select name="language">
+      {% for code, name in languages %}
+        <option value="{{ code }}">{{ name }} ({{ code }})</option>
+      {% endfor %}
+    </select>
+    <input type="submit" value="{% trans "Submit" %}" />
+  </form>
+{% endblock %}

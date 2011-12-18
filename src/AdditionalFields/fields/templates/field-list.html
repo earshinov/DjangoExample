@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}
+  {% trans "Fields" %}
+{% endblock %}
+
+{% block content %}
+  {% if fields %}
+    <ul>
+      {% for field in fields %}
+        <li><a href="/field-editor/?id={{ field.id|urlencode }}&backurl={{ request.get_full_path|urlencode}}">{{ field.name }}</a></li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>{% trans "No fields." %}</p>
+  {% endif %}
+  <p><a class="control" href="/field-editor/?backurl={{ request.get_full_path|urlencode }}">{% trans "Add a field" %}</a></p>
+{% endblock %}
