@@ -48,3 +48,39 @@ class FieldForm(ModelForm):
         self.instance.validateUniqueBookmarkName()
       except ValidationError as e:
         self._errors = e.update_error_dict(self._errors)
+
+  def clean_minLength(self):
+    #
+    # При добавлении нового динамического поля не вставляем
+    # minLength, если поле не текстовое.
+    #
+    # NOTE 1: Не обрабатываем здесь случай редактирования
+    # существующего не-текстового поля, потому что тогда
+    # поле minLength просто не будет выведено в форме
+    #
+    # NOTE 2: Это действие не является строго обязательным —
+    # нет ничего страшного в том, что запищем minLength.
+    # Можно рассматривать этот код как демонстрацию.
+    #
+    # <http://stackoverflow.com/questions/3207036/>
+    # Django: Can I restrict which fields are saved back to the database using forms?
+    #
+
+    # Опираемся здесь на то, что fieldType в списке полей идёт до minLength,
+    # поэтому к моменту вызова этого кода будет уже записан из запроса.
+    if self.cleaned_data['fieldType'] != 'text':
+      # записываем в базу NULL
+      return None
+    else:
+      # используем значение, уже проставленное фреймворком из параметров запроса
+      return self.cleaned_data['minLength']
+
+  def clean_maxLength(self):
+    # При добавлении нового динамического поля не вставляем maxLength,
+    # если поле не текстовое.  Полная аналогия с minLength выше.
+    if self.cleaned_data['fieldType'] != 'text':
+      # записываем в базу NULL
+      return None
+    else:
+      # используем значение, уже проставленное фреймворком из параметров запроса
+      return self.cleaned_data['maxLength']
