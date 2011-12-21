@@ -27,6 +27,13 @@ class FieldForm(ModelForm):
     for fieldName in self.FIELDS_THAT_CANNOT_BE_CHANGED_AFTER_CREATION:
       self.fields[fieldName].notes.append(message)
 
+    # Если редактируется существующее поле, отключаем контролы,
+    # недействительные для данного типа поля.
+    if self.instance and self.instance.id:
+      if self.instance.fieldType != 'text':
+        del self.fields['minLength']
+        del self.fields['maxLength']
+
   def full_clean(self):
     super(FieldForm, self).full_clean()
 
