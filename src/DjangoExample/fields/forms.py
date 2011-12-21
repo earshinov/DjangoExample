@@ -34,6 +34,12 @@ class FieldForm(ModelForm):
         del self.fields['minLength']
         del self.fields['maxLength']
 
+    # если редактируется существующее поле, делаем серенькими контролы,
+    # значения которых нельзя изменить
+    if self.instance and self.instance.id:
+      for fieldName in self.FIELDS_THAT_CANNOT_BE_CHANGED_AFTER_CREATION:
+        self.fields[fieldName].widget.attrs['readonly'] = True
+
   def full_clean(self):
     super(FieldForm, self).full_clean()
 
@@ -48,6 +54,41 @@ class FieldForm(ModelForm):
         self.instance.validateUniqueBookmarkName()
       except ValidationError as e:
         self._errors = e.update_error_dict(self._errors)
+
+
+  def clean_target(self):
+    # Запрещаем изменение этого поля, когда запись в базе уже создана
+    #
+    # <http://stackoverflow.com/questions/324477/>
+    # In a django form, How to make a field readonly (or disabled) so that it cannot be edited?
+    #
+    if self.instance and self.instance.id:
+      # оставляем значение неизменным
+      return self.instance.target
+    else:
+      # используем значение, уже проставленное фреймворком из параметров запроса
+      return self.cleaned_data['target']
+
+  def clean_fieldType(self):
+    # Запрещаем изменение этого поля, когда запись в базе уже создана.
+    # Полная аналогия с target.
+    if self.instance and self.instance.id:
+      # оставляем значение неизменным
+      return self.instance.fieldType
+    else:
+      # используем значение, уже проставленное фреймворком из параметров запроса
+      return self.cleaned_data['fieldType']
+
+  def clean_bookmarkName(self):
+    # Запрещаем изменение этого поля, когда запись в базе уже создана.
+    # Полная аналогия с target.
+    if self.instance and self.instance.id:
+      # оставляем значение неизменным
+      return self.instance.bookmarkName
+    else:
+      # используем значение, уже проставленное фреймворком из параметров запроса
+      return self.cleaned_data['bookmarkName']
+
 
   def clean_minLength(self):
     #
