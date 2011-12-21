@@ -1,4 +1,6 @@
+{% load field_is_readonly %}
 {% load field_widget_type %}
+
 
 {% if form.non_field_errors %}
   <tr class="nonfieldErrors">
@@ -22,10 +24,16 @@
       </td>
     {% endif %}
   </tr>
-  {% if field.errors or field.notes %}
+  {% if field.errors or not field|field_is_readonly and field.notes %}
     <tr>
       <td>&nbsp;</td>
-      <td>{{ field.errors }} {{ field.notes }}</td>
+      <td>
+        {{ field.errors }}
+        {# не отображаем примечания к заполнению поля, когда поле нельзя редактировать #}
+        {% if not field|field_is_readonly %}
+          {{ field.notes }}
+        {% endif %}
+      </td>
     </tr>
   {% endif %}
 {% endfor %}
