@@ -8,6 +8,7 @@
 {% block content %}
   <form action="/i18n/setlang/" method="post">
     <input name="next" type="hidden" value="/" />
+    <input name="session" type="hidden" value="1" />
     <select name="language">
       {% for code, name in languages %}
         <option value="{{ code }}">{{ name }} ({{ code }})</option>
