@@ -37,10 +37,16 @@ def fieldEditor(request):
     else:
       form = FieldForm(request.POST, instance=field)
       if 'save' in request.POST and form.is_valid():
-        form.save()
+        if field:
+          # Указываем force_update, чтобы сэкономить один ненужный
+          # SQL-запрос на проверку существования записи в базе
+          form.save(commit=False)
+          field.save(force_update=True)
+        else:
+          form.save()
         if backurl:
           return HttpResponseRedirect(backurl)
-        if field is None: # was inserted
+        if not field: # was inserted
           return HttpResponseRedirect(reverse(fieldEditor) + u'?id=' + unicode(form.instance.id))
 
   if form is None:
