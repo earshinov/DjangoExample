@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from django.core.exceptions import ValidationError, NON_FIELD_ERRORS
+from django.core.exceptions import ValidationError
 from django.db.models import Model, ForeignKey, Q, \
   BooleanField, CharField, IntegerField
 from django.utils.translation import ugettext_lazy as _
@@ -116,16 +116,16 @@ class Field(Model):
 
     if qs.exists():
       message = self.unique_error_message(Field, ('bookmarkName',))
-      raise ValidationError({ NON_FIELD_ERRORS: message })
+      raise ValidationError({ 'bookmarkName': [message] })
 
   # ===================================================================
   # Переопределение стандартных методов модели
   # ===================================================================
 
-  def full_clean(self, **kw):
+  def validate_unique(self, exclude=None):
     errors = {}
     try:
-      Model.full_clean(self, **kw)
+      Model.validate_unique(self, exclude)
     except ValidationError as e:
       errors = e.update_error_dict(errors)
 

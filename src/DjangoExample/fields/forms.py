@@ -5,7 +5,6 @@ from django.utils.translation import ugettext
 from DjangoExample.forms import formField
 from DjangoExample.forms import ModelForm
 from fields.models import Field
-from django.core.exceptions import ValidationError
 
 ChoiceField = formField(ChoiceField)
 IntegerField = formField(IntegerField)
@@ -39,21 +38,6 @@ class FieldForm(ModelForm):
     if self.instance and self.instance.id:
       for fieldName in self.FIELDS_THAT_CANNOT_BE_CHANGED_AFTER_CREATION:
         self.fields[fieldName].widget.attrs['readonly'] = True
-
-  def full_clean(self):
-    super(FieldForm, self).full_clean()
-
-    # в этом случае никакая валидация проводиться не должна
-    if not self.is_bound:
-      return
-
-    # вызываем для модели дополнительный метод валидации
-    # Field.validateUniqueBookmarkName
-    if self.instance.needValidateUniqueBookmarkName(self._errors):
-      try:
-        self.instance.validateUniqueBookmarkName()
-      except ValidationError as e:
-        self._errors = e.update_error_dict(self._errors)
 
 
   def clean_target(self):
