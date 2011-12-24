@@ -1,19 +1,28 @@
 <!DOCTYPE html>
 {% load assign %}
-<link rel="stylesheet" href="/static/style.css"/>
-{% assign title %}
-  {% block title %}{% endblock %}
-{% endassign %}
-<title>{{ title }}</title>
+<html>
+	{% comment %}
+	При использовании короткой записи (без явных <head> и <body>)
+	не будет работать django-debug-toolbar!
+	{% endcomment %}
+	<head>
+		<link rel="stylesheet" href="/static/style.css"/>
+		{% assign title %}
+		  {% block title %}{% endblock %}
+		{% endassign %}
+		<title>{{ title }}</title>
+	</head>
+	<body>
+		{% if header_footer %}
+		<div class="topMenu">
+		  {% for section in header_footer.site_sections %}
+		    <a class="control {% if section.selected %}active{% endif %}" href="{{ section.default_page }}">{{ section.name }}</a>
+		    {% if not forloop.last %} | {% endif %}
+		  {% endfor %}
+		</div>
+		{% endif %}
 
-{% if header_footer %}
-<div class="topMenu">
-  {% for section in header_footer.site_sections %}
-  	<a class="control {% if section.selected %}active{% endif %}" href="{{ section.default_page }}">{{ section.name }}</a>
-  	{% if not forloop.last %} | {% endif %}
-  {% endfor %}
-</div>
-{% endif %}
-
-<h1>{{ title }}</h1>
-{% block content %}{% endblock %}
+		<h1>{{ title }}</h1>
+		{% block content %}{% endblock %}
+	</body>
+</html>

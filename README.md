@@ -68,7 +68,9 @@
   * Django (тестировалось на версии 1.3.1)
   * [django-easymode][] (тестировалось на версии 1.0b1).  Пакет используется ради средств интернационализации [django-easymode.i18n][]
   * [django-rosetta][] (тестировалось на версии 0.6.2).  Пакет необходим для [django-easymode.i18n][]
+  * [django-debug-toolbar][]
 
 [django-easymode]: http://pypi.python.org/pypi/django-easymode/
 [django-easymode.i18n]: http://packages.python.org/django-easymode/i18n/api.html
 [django-rosetta]: http://pypi.python.org/pypi/django-rosetta/
+[django-debug-toolbar]: https://github.com/django-debug-toolbar/django-debug-toolbar#readme
