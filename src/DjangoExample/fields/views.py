@@ -22,6 +22,52 @@ def fieldList(request):
     context_instance=RequestContext(request))
 
 
+class FieldFormAndFormset(object):
+
+  def __init__(self, request=None, instance=None):
+    field = instance # alias
+    post = None if not request else request.POST
+
+    self.form = FieldForm(post, instance=field)
+    self.optionsFormset = None
+
+    # Создание формсета, если необходимо
+    if not field or (field and field.fieldType == 'list'):
+      # Используем form=<наш базовый класс формы>!
+      OptionsFormset = inlineformset_factory(Field, FieldOption, form=ModelForm)
+      #
+      # Передаём instance=form.instance, а не field.  В качестве field мог
+      # быть передан None; в этом случае пустой instance создаётся внутри
+      # конструктора формы.
+      #
+      # При выполнении сохранения формсет пунктов списка будет обращаться к
+      # заданному instance за идентификатором динамического поля.  В случае,
+      # когда на странице добавляется новое динамическое поле (а не редактируется
+      # существующее), особо важно, чтобы instance, на который ссылаются форма
+      # и формсет, был одним объектом, чтобы формсет узнал идентификатор
+      # вновь добавленной записи.
+      #
+      self.optionsFormset = OptionsFormset(post, instance=self.form.instance)
+
+  def is_valid(self):
+    return self.form.is_valid() and (not self.optionsFormset or self.optionsFormset.is_valid())
+
+  def save(self):
+    self.form.save()
+    if self.form.instance.fieldType == 'list':
+      #
+      # Здесь проверка не на существование self.optionsFormset, потому что при
+      # заведении нового динамического поля формсет показывается, но должен быть
+      # сохранён, только если созданное динамическое поле имеет тип «выбор из списка»
+      #
+      # Дополнительно существование optionsFormset проверять не надо. Для
+      # существующего динамического поля формсет создаётся тогда и только тогда, когда
+      # это динамическое поле имеет тип «выбор из файла», а тип динамического поля
+      # нельзя поменять после создания.
+      #
+      self.optionsFormset.save()
+
+
 def fieldEditor(request):
   # Можно передавать идентификатор редактируемой записи не через параметр
   # URL (field-editor?id={id}), а непосредственно в URL (fields/edit/{id}/).
@@ -36,8 +82,7 @@ def fieldEditor(request):
 
   backurl = request.REQUEST.get('backurl')
 
-  form = None
-  optionsFormset = None
+  x = None
   if request.method == 'POST':
     if field and 'delete' in request.POST:
       field.delete()
@@ -45,34 +90,27 @@ def fieldEditor(request):
         return HttpResponseRedirect(backurl)
       return HttpResponseRedirect(reverse(fieldEditor))
     else:
-
-      form = FieldForm(request.POST, instance=field)
-      if not field or (field and field.fieldType == 'list'):
-        optionsFormset = inlineformset_factory(Field, FieldOption, form=ModelForm)(request.POST, instance=form.instance)
+      x = FieldFormAndFormset(request, instance=field)
       if 'save' in request.POST:
         with transaction.commit_on_success():
-          if form.is_valid() and (not optionsFormset or optionsFormset.is_valid()):
-            form.save()
-            if form.instance.fieldType == 'list':
-              optionsFormset.save()
+          if x.is_valid():
+            savedField = x.save()
             if backurl:
               return HttpResponseRedirect(backurl)
             if not field: # was inserted
-              return HttpResponseRedirect(reverse(fieldEditor) + u'?id=' + unicode(form.instance.id))
+              return HttpResponseRedirect(reverse(fieldEditor) + u'?id=' + unicode(savedField.id))
 
-  if form is None:
-    form = FieldForm(instance=field)
-    if not field or (field and field.fieldType == 'list'):
-      optionsFormset = inlineformset_factory(Field, FieldOption, form=ModelForm)(instance=form.instance)
+  if x is None:
+    x = FieldFormAndFormset(instance=field)
 
   if field is not None:
-    form.addHidden('id', field.id)
+    x.form.addHidden('id', field.id)
   if backurl:
-    form.addHidden('backurl', backurl)
+    x.form.addHidden('backurl', backurl)
 
   return render_to_response('field-editor.html', {
-    'form': form,
-    'optionsFormset': optionsFormset,
+    'form': x.form,
+    'optionsFormset': x.optionsFormset,
     'header_footer': HeaderFooter('fields'),
   })
 
