@@ -38,7 +38,7 @@
         {% if field.name == "minLength" %}
           <tr>
             <td colspan="2">
-              <h2 class="formTableSubheading">Параметры текста{% if not form.instance.id %} (для полей типа «Текст»){% endif %}</h2>
+              <h2 class="formTableSubheading">{% trans "Text options" %}{% if not form.instance.id %} ({% trans 'for "Text" fields' %}){% endif %}</h2>
             </td>
           </tr>
         {% endif %}
@@ -49,7 +49,7 @@
 
     {# Пункты списка #}
     {% if optionsFormset %}
-      <h2 class="formTableSubheading">Пункты списка{% if not form.instance.id %} (для полей типа «Выбор из списка»){% endif %}</h2>
+      <h2 class="formTableSubheading">{% trans "List items" %}{% if not form.instance.id %} ({% trans 'for "Choice from list" fields' %}){% endif %}</h2>
       {% assign formset optionsFormset %}
       {% include "formset-table-template.html" %}
     {% endif %}
