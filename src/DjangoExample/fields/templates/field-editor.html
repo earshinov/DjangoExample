@@ -13,10 +13,48 @@
 
 {% block content %}
   <form action="." method="post">
+
+    {# Скрытые поля #}
     {% include "form-hiddens.html" %}
+    {% if optionsFormset %}
+      {{ optionsFormset.management_form }}
+      {% for form in optionsFormset %}
+        {% include "form-hiddens.html" %}
+      {% endfor %}
+    {% endif %}
+
+    {# Таблица основных контролов #}
     <table class="formTable">
-      {% include "form-template.html" %}
+
+      {# Ошибки формы #}
+      {% if form.non_field_errors %}
+        <tr class="nonfieldErrors">
+          <td colspan="2">{{ form.non_field_errors }}</td>
+        </tr>
+      {% endif %}
+
+      {# Редактируемые поля #}
+      {% for field in form.visible_fields %}
+        {% if field.name == "minLength" %}
+          <tr>
+            <td colspan="2">
+              <h2 class="formTableSubheading">{% trans "Text options" %}{% if not form.instance.id %} ({% trans 'for "Text" fields' %}){% endif %}</h2>
+            </td>
+          </tr>
+        {% endif %}
+        {% include "form-template__field.html" %}
+      {% endfor %}
+
     </table>
+
+    {# Пункты списка #}
+    {% if optionsFormset %}
+      <h2 class="formTableSubheading">{% trans "List items" %}{% if not form.instance.id %} ({% trans 'for "Choice from list" fields' %}){% endif %}</h2>
+      {% assign formset optionsFormset %}
+      {% include "formset-table-template.html" %}
+    {% endif %}
+
+    {# Кнопочки #}
     <div class="formButtons">
       <input type="submit" name="save" value="{% trans 'Submit' %}"/>
       {% if form.instance.id %}
@@ -26,5 +64,6 @@
         <a class="control backLink" href="{{ form.backurl.value }}">{% trans "Back" %}</a>
       {% endif %}
     </div>
+
   </form>
 {% endblock %}

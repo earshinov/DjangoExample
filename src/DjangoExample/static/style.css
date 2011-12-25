@@ -14,18 +14,17 @@ a.control { color: RoyalBlue; }
 /* Формы
 -------------------------------------------------------------------- */
 
-.formTable { margin: 0 0 1em; border-spacing: 2px; margin-left: -6px; }
+.formTable { margin: 0; border-spacing: 2px; margin-left: -6px; }
 .formTable td, .formTable th { padding: 1px 4px; }
 .formTable th { text-align: left; font-weight: normal; }
 .formTable input[type=checkbox] { margin: 0; }
-.formTable .required label:after { content: " *"; color: Red; }
+.formTable .required label:after, .formTable span.required:after { content: " *"; color: Red; }
 .formTable .error input, .formTable .error select { border: 2px Solid Red; }
 
-.nonfieldErrors,
-.errorlist,
-.notelist { margin: 0; list-style-type: none; padding-left: 0; font-size: smaller; }
-.nonfieldErrors,
-.errorlist { font-weight: bold; color: Red; }
+.nonfieldErrors, .errorlist, .notelist { margin: 0; list-style-type: none; padding-left: 0; font-size: smaller; }
+.nonfieldErrors, .errorlist { font-weight: bold; color: Red; }
 .notelist { color: #666; }
 
+.formButtons { margin-top: 1em; }
 .formButtons .backLink { margin-left: .5em; }
+.formTableSubheading { font-size: 90%; font-weight: bold; margin: .5em 0; }

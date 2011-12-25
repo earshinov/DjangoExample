@@ -1,7 +1,3 @@
-{% load field_is_readonly %}
-{% load field_widget_type %}
-
-
 {% if form.non_field_errors %}
   <tr class="nonfieldErrors">
     <td colspan="2">{{ form.non_field_errors }}</td>
@@ -9,31 +5,5 @@
 {% endif %}
 
 {% for field in form.visible_fields %}
-  <tr class="{{ field.css_classes }} {% if field.errors %}error{% endif %}">
-    {% if field|field_widget_type == "CheckboxInput" %}
-      <td colspan="2">
-        {{ field }}
-        {{ field.label_tag }}
-      </td>
-    {% else %}
-      <th scope="row">
-        {{ field.label_tag_with_suffix }}
-      </th>
-      <td>
-        {{ field }}
-      </td>
-    {% endif %}
-  </tr>
-  {% if field.errors or not field|field_is_readonly and field.notes %}
-    <tr>
-      <td>&nbsp;</td>
-      <td>
-        {{ field.errors }}
-        {# не отображаем примечания к заполнению поля, когда поле нельзя редактировать #}
-        {% if not field|field_is_readonly %}
-          {{ field.notes }}
-        {% endif %}
-      </td>
-    </tr>
-  {% endif %}
+  {% include "form-template__field.html" %}
 {% endfor %}

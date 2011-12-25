@@ -1,0 +1,60 @@
+{% comment %}
+Представление формсета в виде таблицы.
+Каждой форме в формсете соответствует строка таблицы, заголовки полей выносятся в заголовок таблицы.
+Подразумевается, что поля во всех формах одинаковы.
+{% endcomment %}
+
+{% load assign %}
+{% load field_widget_type %}
+
+{% if formset.forms %}
+  <table class="formTable formsetTable">
+
+    {% comment %}
+    Заголовок.
+    Названия полей берутся из первой формы.
+    CSS-классы, сопоставленные полям, выводятся в вёрстку только в заголовке
+    и отсутствуют на уровне строк таблицы!
+    {% endcomment %}
+    <tr>
+      {% assign cols formset.forms.0.visible_fields|length %}
+      {% for field in formset.forms.0.visible_fields %}
+        <th>
+          <span class="{{ field.css_classes }}">{{ field.label }}</span>
+        </th>
+      {% endfor %}
+    </tr>
+
+    {# Вывод форм из формсета #}
+    {% for form in formset.forms %}
+
+      {# Строка ошибок формы #}
+      {% if form.errors %}
+        <tr>
+          <td colspan="{{cols}}">
+            <ul class="errorlist">
+              {% for field, errors in form.errors.iteritems %}
+                {% for error in errors %}
+                  <li>{{ error }}</li>
+                {% endfor %}
+              {% endfor %}
+            </ul>
+          </td>
+        </tr>
+      {% endif %}
+
+      {# Содержимое формы #}
+      <tr>
+        {% for field in form.visible_fields %}
+          <td class="{% if field.errors %}error{% endif %}">
+            {{ field }}
+            {% if field|field_widget_type == "CheckboxInput" %}
+              {{ field.label_tag }}
+            {% endif %}
+          </td>
+        {% endfor %}
+      </tr>
+
+    {% endfor %}
+  </table>
+{% endif %}

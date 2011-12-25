@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 
 from django.core.exceptions import ValidationError
-from django.db.models import Model, ForeignKey, Q, \
+from django.db.models import ForeignKey, Q, \
   BooleanField, CharField, IntegerField
 from django.utils.translation import ugettext_lazy as _
 from DjangoExample.forms import modelField
+from DjangoExample.models import Model
 from DjangoExample.i18n import I18n
 from DjangoExample.validators import LatinCharsValidator
 
@@ -156,12 +157,11 @@ class Field(Model):
 class FieldOption(Model):
   field = ForeignKey(Field,
     verbose_name=_('Field'),
-    db_column='field')
-  name = CharField(
-    name=_('Name'),
+    db_column='field',
+    related_name='fieldOptions')
+  name = CharField(_('Name'),
     max_length=128)
-  bookmarkName = CharField(
-    name=_('Bookmark Name'),
+  bookmarkName = CharField(_('Bookmark Name'),
     max_length=128,
     validators=[LatinCharsValidator()])
 
