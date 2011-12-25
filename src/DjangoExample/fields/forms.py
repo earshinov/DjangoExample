@@ -1,13 +1,8 @@
 # -*- coding: utf-8 -*-
 
-from django.forms import ChoiceField, IntegerField
 from django.utils.translation import ugettext
-from DjangoExample.forms import formField
 from DjangoExample.forms import ModelForm
 from fields.models import Field
-
-ChoiceField = formField(ChoiceField)
-IntegerField = formField(IntegerField)
 
 
 class FieldForm(ModelForm):
