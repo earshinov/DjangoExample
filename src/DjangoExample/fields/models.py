@@ -156,12 +156,11 @@ class Field(Model):
 class FieldOption(Model):
   field = ForeignKey(Field,
     verbose_name=_('Field'),
-    db_column='field')
-  name = CharField(
-    name=_('Name'),
+    db_column='field',
+    related_name='fieldOptions')
+  name = CharField(_('Name'),
     max_length=128)
-  bookmarkName = CharField(
-    name=_('Bookmark Name'),
+  bookmarkName = CharField(_('Bookmark Name'),
     max_length=128,
     validators=[LatinCharsValidator()])
 
