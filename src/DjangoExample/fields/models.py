@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 
 from django.core.exceptions import ValidationError
-from django.db.models import Model, ForeignKey, Q, \
+from django.db.models import ForeignKey, Q, \
   BooleanField, CharField, IntegerField
 from django.utils.translation import ugettext_lazy as _
 from DjangoExample.forms import modelField
+from DjangoExample.models import Model
 from DjangoExample.i18n import I18n
 from DjangoExample.validators import LatinCharsValidator
 

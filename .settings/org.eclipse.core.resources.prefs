@@ -1,4 +1,4 @@
-#Wed Dec 21 12:21:16 MSK 2011
+#Sun Dec 25 18:32:48 MSK 2011
 eclipse.preferences.version=1
 encoding//src/DjangoExample/fields/forms.py=utf-8
 encoding//src/DjangoExample/fields/models.py=utf-8
@@ -6,6 +6,7 @@ encoding//src/DjangoExample/fields/views.py=utf-8
 encoding//src/DjangoExample/forms.py=utf-8
 encoding//src/DjangoExample/i18n.py=utf-8
 encoding//src/DjangoExample/language_selection/views.py=utf-8
+encoding//src/DjangoExample/models.py=utf-8
 encoding//src/DjangoExample/settings.py=utf-8
 encoding//src/DjangoExample/urls.py=utf-8
 encoding//src/DjangoExample/utils/templatetags/assign.py=utf-8

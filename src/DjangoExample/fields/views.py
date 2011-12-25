@@ -52,17 +52,9 @@ def fieldEditor(request):
       if 'save' in request.POST:
         with transaction.commit_on_success():
           if form.is_valid() and (not optionsFormset or optionsFormset.is_valid()):
-            if field:
-              # Указываем force_update, чтобы сэкономить один ненужный
-              # SQL-запрос на проверку существования записи в базе
-              form.save(commit=False)
-              field.save(force_update=True)
-              if optionsFormset:
-                optionsFormset.save()
-            else:
-              form.save()
-              if form.instance.fieldType == 'list':
-                optionsFormset.save()
+            form.save()
+            if form.instance.fieldType == 'list':
+              optionsFormset.save()
             if backurl:
               return HttpResponseRedirect(backurl)
             if not field: # was inserted
