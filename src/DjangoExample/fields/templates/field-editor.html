@@ -13,10 +13,27 @@
 
 {% block content %}
   <form action="." method="post">
+
+    {# Скрытые поля #}
     {% include "form-hiddens.html" %}
+    {% if optionsFormset %}
+      {{ optionsFormset.management_form }}
+      {% for form in optionsFormset %}
+        {% include "form-hiddens.html" %}
+      {% endfor %}
+    {% endif %}
+
+    {# Редактируемые поля #}
     <table class="formTable">
       {% include "form-template.html" %}
+      {% if optionsFormset %}
+        {% for form in optionsFormset %}
+          {% include "form-template.html" %}
+        {% endfor %}
+      {% endif %}
     </table>
+
+    {# Кнопочки #}
     <div class="formButtons">
       <input type="submit" name="save" value="{% trans 'Submit' %}"/>
       {% if form.instance.id %}
@@ -26,5 +43,6 @@
         <a class="control backLink" href="{{ form.backurl.value }}">{% trans "Back" %}</a>
       {% endif %}
     </div>
+
   </form>
 {% endblock %}
