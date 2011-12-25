@@ -2,6 +2,7 @@
 
 from django.shortcuts import get_object_or_404, render_to_response
 from django.core.urlresolvers import reverse
+from django.db import transaction
 from django.forms.models import inlineformset_factory
 from django.http import HttpResponseRedirect
 from django.template import RequestContext
@@ -48,22 +49,24 @@ def fieldEditor(request):
       form = FieldForm(request.POST, instance=field)
       if not field or (field and field.fieldType == 'list'):
         optionsFormset = inlineformset_factory(Field, FieldOption, form=ModelForm)(request.POST, instance=form.instance)
-      if 'save' in request.POST and form.is_valid() and (not optionsFormset or optionsFormset.is_valid()):
-        if field:
-          # Указываем force_update, чтобы сэкономить один ненужный
-          # SQL-запрос на проверку существования записи в базе
-          form.save(commit=False)
-          field.save(force_update=True)
-          if optionsFormset:
-            optionsFormset.save()
-        else:
-          form.save()
-          if form.instance.fieldType == 'list':
-            optionsFormset.save()
-        if backurl:
-          return HttpResponseRedirect(backurl)
-        if not field: # was inserted
-          return HttpResponseRedirect(reverse(fieldEditor) + u'?id=' + unicode(form.instance.id))
+      if 'save' in request.POST:
+        with transaction.commit_on_success():
+          if form.is_valid() and (not optionsFormset or optionsFormset.is_valid()):
+            if field:
+              # Указываем force_update, чтобы сэкономить один ненужный
+              # SQL-запрос на проверку существования записи в базе
+              form.save(commit=False)
+              field.save(force_update=True)
+              if optionsFormset:
+                optionsFormset.save()
+            else:
+              form.save()
+              if form.instance.fieldType == 'list':
+                optionsFormset.save()
+            if backurl:
+              return HttpResponseRedirect(backurl)
+            if not field: # was inserted
+              return HttpResponseRedirect(reverse(fieldEditor) + u'?id=' + unicode(form.instance.id))
 
   if form is None:
     form = FieldForm(instance=field)
