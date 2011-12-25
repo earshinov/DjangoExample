@@ -23,12 +23,33 @@
       {% endfor %}
     {% endif %}
 
-    {# Редактируемые поля #}
+    {# Таблица основных контролов #}
     <table class="formTable">
-      {% include "form-template.html" %}
+
+      {# Ошибки формы #}
+      {% if form.non_field_errors %}
+        <tr class="nonfieldErrors">
+          <td colspan="2">{{ form.non_field_errors }}</td>
+        </tr>
+      {% endif %}
+
+      {# Редактируемые поля #}
+      {% for field in form.visible_fields %}
+        {% if field.name == "minLength" %}
+          <tr>
+            <td colspan="2">
+              <h2 class="formTableSubheading">Параметры текста{% if not form.instance.id %} (для полей типа «Текст»){% endif %}</h2>
+            </td>
+          </tr>
+        {% endif %}
+        {% include "form-template__field.html" %}
+      {% endfor %}
+
     </table>
 
+    {# Пункты списка #}
     {% if optionsFormset %}
+      <h2 class="formTableSubheading">Пункты списка{% if not form.instance.id %} (для полей типа «Выбор из списка»){% endif %}</h2>
       {% assign formset optionsFormset %}
       {% include "formset-table-template.html" %}
     {% endif %}

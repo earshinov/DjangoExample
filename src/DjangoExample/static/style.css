@@ -14,7 +14,7 @@ a.control { color: RoyalBlue; }
 /* Формы
 -------------------------------------------------------------------- */
 
-.formTable { margin: 0 0 1em; border-spacing: 2px; margin-left: -6px; }
+.formTable { margin: 0; border-spacing: 2px; margin-left: -6px; }
 .formTable td, .formTable th { padding: 1px 4px; }
 .formTable th { text-align: left; font-weight: normal; }
 .formTable input[type=checkbox] { margin: 0; }
@@ -25,4 +25,6 @@ a.control { color: RoyalBlue; }
 .nonfieldErrors, .errorlist { font-weight: bold; color: Red; }
 .notelist { color: #666; }
 
+.formButtons { margin-top: 1em; }
 .formButtons .backLink { margin-left: .5em; }
+.formTableSubheading { font-size: 90%; font-weight: bold; margin: .5em 0; }
