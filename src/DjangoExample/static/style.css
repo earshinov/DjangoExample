@@ -18,14 +18,11 @@ a.control { color: RoyalBlue; }
 .formTable td, .formTable th { padding: 1px 4px; }
 .formTable th { text-align: left; font-weight: normal; }
 .formTable input[type=checkbox] { margin: 0; }
-.formTable .required label:after { content: " *"; color: Red; }
+.formTable .required label:after, .formTable span.required:after { content: " *"; color: Red; }
 .formTable .error input, .formTable .error select { border: 2px Solid Red; }
 
-.nonfieldErrors,
-.errorlist,
-.notelist { margin: 0; list-style-type: none; padding-left: 0; font-size: smaller; }
-.nonfieldErrors,
-.errorlist { font-weight: bold; color: Red; }
+.nonfieldErrors, .errorlist, .notelist { margin: 0; list-style-type: none; padding-left: 0; font-size: smaller; }
+.nonfieldErrors, .errorlist { font-weight: bold; color: Red; }
 .notelist { color: #666; }
 
 .formButtons .backLink { margin-left: .5em; }

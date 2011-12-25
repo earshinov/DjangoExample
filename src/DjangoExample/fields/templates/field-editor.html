@@ -26,12 +26,12 @@
     {# Редактируемые поля #}
     <table class="formTable">
       {% include "form-template.html" %}
-      {% if optionsFormset %}
-        {% for form in optionsFormset %}
-          {% include "form-template.html" %}
-        {% endfor %}
-      {% endif %}
     </table>
+
+    {% if optionsFormset %}
+      {% assign formset optionsFormset %}
+      {% include "formset-table-template.html" %}
+    {% endif %}
 
     {# Кнопочки #}
     <div class="formButtons">
