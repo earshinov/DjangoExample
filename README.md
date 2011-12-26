@@ -72,7 +72,7 @@
 
 ### Советы касательно разработки на Django
 
-  * Eclipse + PyDev — довольно вменяемая IDE.  Единственная значимая проблема — [Go to arbitrary module source\?][1].  Чтобы, используя сочетание клавиш Ctrl-Shift-T, можно было переходить к объявлениям классов из Django, необходимо добавить каталог Django (например, `/usr/lib/python2.7/site-packages/django/`) в список source folders проекта.  Для этого открыть окно свойств проекта > пункт *Pydev - PYTHONPATH* > вкладка *External Libraries* > нажать кнопку *Add source folder*.
+  * Eclipse + PyDev — довольно вменяемая IDE.  Единственная значимая проблема — [Go to arbitrary module source?][1].  Чтобы, используя сочетание клавиш Ctrl-Shift-T, можно было переходить к объявлениям классов из Django, необходимо добавить каталог Django (например, `/usr/lib/python2.7/site-packages/django/`) в список source folders проекта.  Для этого открыть окно свойств проекта > пункт «Pydev - PYTHONPATH» > вкладка «External Libraries» > нажать кнопку «Add source folder».
 
   * Чтобы отслеживать выполняемые Django SQL-запросы во время отладки, достаточно поставить точку останова внутрь метода `SQLCompiler.executeSQL` в пакете `django.db.models.sql.compiler`.
 
